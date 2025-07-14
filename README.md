@@ -1,35 +1,13 @@
 # PROJECT NO-1
-🛡️ PhishVision - Simple Email Phishing Detector by Pradyun
+// AI Resume & Interview Prep Platform (MVP Version)
 
-Language: Python 3
+import React, { useState } from "react"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Textarea } from "@/components/ui/textarea"; import { Input } from "@/components/ui/input"; import { Sparkles } from "lucide-react";
 
-import re
+export default function ResumeInterviewApp() { const [resumeInput, setResumeInput] = useState(""); const [aiResume, setAiResume] = useState(""); const [interviewQn, setInterviewQn] = useState([]); const [loading, setLoading] = useState(false);
 
-def check_phishing_signs(email_text): phishing_keywords = [ "urgent", "verify your account", "update your information", "click here", "login now", "account suspended", "password expired", "bank", "lottery", "prize" ]
+const generateResume = async () => { setLoading(true); const prompt = Create a modern, professional resume for this info: ${resumeInput}; const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", headers: { "Content-Type": "application/json", Authorization: Bearer YOUR_OPENAI_API_KEY }, body: JSON.stringify({ model: "gpt-4", messages: [{ role: "user", content: prompt }] }) }); const data = await response.json(); setAiResume(data.choices[0].message.content); setLoading(false); };
 
-suspicious_links = re.findall(r"https?://[\w./-]+", email_text)
-keyword_hits = [word for word in phishing_keywords if word in email_text.lower()]
+const getInterviewQuestions = async () => { setLoading(true); const prompt = Give 5 common interview questions for someone applying as: ${resumeInput}; const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", headers: { "Content-Type": "application/json", Authorization: Bearer YOUR_OPENAI_API_KEY }, body: JSON.stringify({ model: "gpt-4", messages: [{ role: "user", content: prompt }] }) }); const data = await response.json(); const text = data.choices[0].message.content; setInterviewQn(text.split("\n").filter((q) => q)); setLoading(false); };
 
-print("\n📄 EMAIL ANALYSIS RESULT")
-print("-------------------------")
+return ( <div className="max-w-2xl mx-auto p-4 space-y-4"> <Card className="p-4"> <CardContent> <h1 className="text-xl font-bold mb-2">AI
 
-if suspicious_links:
-    print(f"🔗 Suspicious Links Found:")
-    for link in suspicious_links:
-        print(f" - {link}")
-else:
-    print("✅ No suspicious links detected.")
-
-if keyword_hits:
-    print(f"⚠️ Phishing Keywords Detected:")
-    for word in keyword_hits:
-        print(f" - {word}")
-else:
-    print("✅ No phishing keywords detected.")
-
-if suspicious_links or keyword_hits:
-    print("❌ WARNING: This email might be a phishing attempt!")
-else:
-    print("✅ This email looks clean.")
-
-if name == "main": print("\n=== 🛡️ Welcome to PhishVision by Pradyun ===") email_input = input("\n📥 Paste the email text to scan for phishing: \n\n") check_phishing_signs(email_input)
